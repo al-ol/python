@@ -16,7 +16,7 @@ def walk(start_folder):
     for d, dirs, files in os.walk(start_folder):
         for f in files:
             if f[0] != '.' and f[0] != '~':
-                s = os.path.join(d, f)
+                s = os.path.abspath(os.path.join(d, f))
                 di[my_hash(s)].append(s)
     return di
 
