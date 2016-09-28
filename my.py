@@ -6,9 +6,9 @@ from collections import defaultdict
 
 def write_same(start_folder):
     di = walk(start_folder)
-    for i, j in di.items():
-        if (len(di[i]) > 1):
-            print (":".join(j))
+    for i in di:
+        if len(di[i]) > 1:
+            print (":".join(di[i]))
 
 
 def walk(start_folder):
@@ -17,7 +17,8 @@ def walk(start_folder):
         for f in files:
             if f[0] != '.' and f[0] != '~':
                 s = os.path.abspath(os.path.join(d, f))
-                di[my_hash(s)].append(s)
+                if not os.path.islink(s):
+                    di[my_hash(s)].append(s)
     return di
 
 
