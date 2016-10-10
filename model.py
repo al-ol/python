@@ -3,14 +3,14 @@
 
 class Scope:
     def __init__(self, parent=None):
-        self.parent_now = parent
+        self.parent = parent
         self.d = {}
 
     def __getitem__(self, item):
-        if item in self.d.keys():
+        if item in self.d:
             return self.d[item]
         else:
-            return self.parent_now[item]
+            return self.parent[item]
 
     def __setitem__(self, key, value):
         self.d[key] = value
@@ -105,40 +105,31 @@ class Reference:
 
 
 class BinaryOperation:
+    d = {
+        "+": lambda x, y: x + y,
+        "-": lambda x, y: x - y,
+        "*": lambda x, y: x * y,
+        "/": lambda x, y: x // y,
+        "%": lambda x, y: x % y,
+        "==": lambda x, y: int(x == y),
+        "!=": lambda x, y: int(x != y),
+        "<": lambda x, y: int(x < y),
+        ">": lambda x, y: int(x > y),
+        "<=": lambda x, y: int(x <= y),
+        ">=": lambda x, y: int(x >= y),
+        "&&": lambda x, y: x and y,
+        "||": lambda x, y: x or y,
+    }
+
     def __init__(self, lhs, op, rhs):
         self.a = lhs
         self.zn = op
         self.b = rhs
 
     def evaluate(self, scope):
-        a = self.a.evaluate(scope)
-        b = self.b.evaluate(scope)
-        if self.zn == '+':
-            return Number(a.value + b.value)
-        if self.zn == '-':
-            return Number(a.value - b.value)
-        if self.zn == '*':
-            return Number(a.value * b.value)
-        if self.zn == '/':
-            return Number(a.value // b.value)
-        if self.zn == '%':
-            return Number(a.value % b.value)
-        if self.zn == '==':
-            return Number(int(a.value == b.value))
-        if self.zn == '!=':
-            return Number(int(a.value != b.value))
-        if self.zn == '<':
-            return Number(int(a.value < b.value))
-        if self.zn == '>':
-            return Number(int(a.value > b.value))
-        if self.zn == '<=':
-            return Number(int(a.value <= b.value))
-        if self.zn == '>=':
-            return Number(int(a.value >= b.value))
-        if self.zn == '&&':
-            return Number(a.value and b.value)
-        if self.zn == '||':
-            return Number(a.value or b.value)
+        a = self.a.evaluate(scope).value
+        b = self.b.evaluate(scope).value
+        return Number(self.d[self.zn](a, b))
 
 
 class UnaryOperation:
@@ -189,7 +180,7 @@ def my_tests():
                          Reference("olya"))).evaluate(alol)
     Read("al").evaluate(alol)
     Print(BinaryOperation(Reference("al"),
-                          "/", Reference("olya"))).evaluate(alol)
+                          ">", Reference("olya"))).evaluate(alol)
 
 
 if __name__ == '__main__':
