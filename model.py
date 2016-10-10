@@ -120,7 +120,7 @@ class BinaryOperation:
         if self.zn == '*':
             return Number(a.value * b.value)
         if self.zn == '/':
-            return Number(a.value / b.value)
+            return Number(a.value // b.value)
         if self.zn == '%':
             return Number(a.value % b.value)
         if self.zn == '==':
@@ -189,7 +189,7 @@ def my_tests():
                          Reference("olya"))).evaluate(alol)
     Read("al").evaluate(alol)
     Print(BinaryOperation(Reference("al"),
-                          "*", Reference("olya"))).evaluate(alol)
+                          "/", Reference("olya"))).evaluate(alol)
 
 
 if __name__ == '__main__':
